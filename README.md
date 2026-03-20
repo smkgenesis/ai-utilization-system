@@ -1,225 +1,134 @@
 # AI Utilization System
 
-Practical architecture for using AI tools across research, learning, and software development.
+Reference repository for the AI utilization system.
 
-## What This Is
+If you already read the blog post, treat this repository as the implementation-facing companion: documentation, folder templates, examples, and a minimal reproducible environment.
 
-This repository is a system repository, not a product repository.
+For Korean readers, see [`README.ko.md`](/C:/Users/smkge/Develop/ai-utilization-system/README.ko.md).
 
-Its purpose is to help you build a personal AI working environment where multiple tools cooperate through shared context instead of being used independently.
+## What This Repo Contains
 
-In practical terms, this repository distributes:
+- architecture docs for the system structure
+- setup guidance for the baseline environment
+- workflow references for common operating patterns
+- an `AI_OS` folder template you can copy into Drive
+- example `librarian_memory` files
+- a minimal Docker environment for CLI-based setup
 
-- the operating philosophy
-- the architecture
-- the folder template
-- the minimal reproducible environment
+This repo is not an app and not a full automation framework.
 
-The system is designed for:
+It is a system template.
 
-- studying university courses
-- managing research materials
-- writing long documents
-- building software projects
-- organizing knowledge over time
+## Reader Assumption
 
-## Why This Exists
+This README assumes you already understand the high-level idea:
 
-AI tools are powerful, but typical usage quickly becomes fragmented.
+- shared memory lives outside any single AI tool
+- tools have clear roles
+- context should persist across sessions
 
-Common pattern:
+If you need the concept and motivation first, start from the blog post, then return here.
 
-`ChatGPT -> Perplexity -> NotebookLM -> Drive -> repeat`
+## Start Here
 
-Over time:
+1. Read [`docs/architecture.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/architecture.md).
+2. Review [`docs/setup.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/setup.md).
+3. Copy [`template/AI_OS`](/C:/Users/smkge/Develop/ai-utilization-system/template/AI_OS) into your Drive workspace.
+4. Use [`examples/`](/C:/Users/smkge/Develop/ai-utilization-system/examples) to shape your first `librarian_memory` files.
+5. If you want a reproducible environment, use [`docker/README.md`](/C:/Users/smkge/Develop/ai-utilization-system/docker/README.md).
 
-- context gets fragmented
-- knowledge spreads across tools
-- switching costs increase
-- long-term work loses structure
+## Repository Map
 
-The limitation is not model capability.
+### [`docs/`](/C:/Users/smkge/Develop/ai-utilization-system/docs)
 
-The real problem is the lack of architecture.
+Core reference documents.
 
-## Core Idea
+- [`docs/architecture.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/architecture.md): system structure, memory model, and control policy
+- [`docs/setup.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/setup.md): baseline environment and recommended setup order
+- [`docs/workflows.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/workflows.md): example workflows for study, research, writing, and software projects
+- [`docs/philosophy.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/philosophy.md): design constraints and operating principles
 
-Assign a clear role to each tool.
+### [`template/AI_OS/`](/C:/Users/smkge/Develop/ai-utilization-system/template/AI_OS)
 
-| Role | Tool |
-| --- | --- |
-| Search | Perplexity |
-| Store | Zotero |
-| Analyze | NotebookLM |
-| Organize | Gemini |
-| Design | Claude |
-| Build | ChatGPT / Codex |
-| Code State | GitHub |
-| Memory | Google Drive |
-| Control | `gws` CLI |
+Starting folder structure for the shared memory layer.
 
-Each tool does one job well.
+Includes:
 
-## Architecture
+- `University/`
+- `Projects/`
+- `Librarian/`
+- example `librarian_memory/` files for course and project workspaces
 
-This system is built around one simple principle:
+Use this as a bootstrap, not as a rigid schema.
 
-`Google Drive = shared memory`
+### [`examples/`](/C:/Users/smkge/Develop/ai-utilization-system/examples)
 
-`Gemini CLI = memory operator`
+Small sample files for:
 
-Flow:
+- `current_task.md`
+- `brief.md`
+- `handoff.md`
 
-`Inputs -> Gemini CLI -> Google Drive -> AI tools -> Outputs`
+These are intended to show the expected shape of local working context.
 
-Code output is tracked separately in GitHub.
+### [`docker/`](/C:/Users/smkge/Develop/ai-utilization-system/docker)
 
-```text
-                    INPUTS
-   (PDFs, notes, docs, course files, drafts)
-                         |
-                         v
-                +-------------------+
-                |    Gemini CLI     |
-                |   via gws CLI     |
-                |                   |
-                | - classify        |
-                | - rename          |
-                | - route           |
-                | - update memory   |
-                | - extract dates   |
-                +---------+---------+
-                          |
-                          v
-                +-------------------+
-                |   Google Drive    |
-                |   Memory Layer    |
-                +---------+---------+
-                          |
-        +-----------------+-----------------+
-        v                                   v
-+----------------------+       +----------------------+
-|   Knowledge Tools    |       |   Execution Tools    |
-| NotebookLM           |       | Claude               |
-| Perplexity           |       | ChatGPT / Codex      |
-| Zotero (manual)      |       | Claude Code          |
-+----------------------+       +----------------------+
-        |                                   |
-        v                                   v
-   Analysis / Search                Design / Build / Code
+Minimal reproducible CLI environment for working with:
 
-                          |
-                          v
-                        OUTPUTS
-                          |
-              +-----------+-----------+
-              v                       v
-        Google Drive            GitHub (code)
-```
-
-## Minimal Setup
-
-You do not need every tool from day one.
-
-Minimal working setup:
-
-- Google Drive
+- `gcloud`
+- `gws`
 - Gemini CLI
-- `gws` CLI
+- Node.js
+- Python
 
-This already gives you:
+Use this if you want a clean starting point instead of configuring everything directly on the host.
 
-- file organization
-- persistent memory
-- reusable context
+## Recommended Use
 
-Optional additions:
+Use this repository in three layers.
 
-- Perplexity for search
-- NotebookLM for analysis
-- Claude for reasoning and design
-- ChatGPT / Codex for implementation
-- GitHub for code state
-- Zotero for research archive
+1. Read the docs to understand the operating model.
+2. Copy the template into your own workspace.
+3. Adapt the structure and tooling to your environment.
 
-## Repository Structure
+The important artifact is not the repo itself.
 
-```text
-ai-utilization-system/
-|-- README.md
-|-- docs/
-|   |-- architecture.md
-|   |-- setup.md
-|   |-- workflows.md
-|   `-- philosophy.md
-|-- template/
-|   `-- AI_OS/
-|       |-- University/
-|       |-- Projects/
-|       `-- Librarian/
-|-- examples/
-|   |-- example_current_task.md
-|   |-- example_brief.md
-|   `-- example_handoff.md
-`-- docker/
-    |-- Dockerfile
-    |-- docker-compose.yml
-    `-- README.md
-```
+The important artifact is your own working system derived from it.
 
-## Quick Start
+## Minimal Adoption Path
 
-1. Clone this repository.
-2. Read [`docs/architecture.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/architecture.md).
-3. Copy the [`template/AI_OS`](/C:/Users/smkge/Develop/ai-utilization-system/template/AI_OS) folder into your Google Drive workspace.
-4. Set up the environment from [`docs/setup.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/setup.md).
-5. If you want a reproducible CLI environment, start from [`docker/README.md`](/C:/Users/smkge/Develop/ai-utilization-system/docker/README.md).
+If you want the smallest possible starting point:
 
-## Design Principles
+1. Create `AI_OS/`
+2. Add `University/`, `Projects/`, and `Librarian/`
+3. Add one real `librarian_memory/` folder
+4. Install Gemini CLI and `gws`
+5. Route one real file through the system
 
-- AI assists thinking. It does not replace it.
-- AI is a cognitive tool.
-- Working systems matter more than perfect systems.
-- Tools are replaceable.
-- Context should persist.
+That is enough to validate the architecture.
 
-## Librarian Policy
+## Operating Rule
 
-The following locations are intended to be AI-managed:
+Treat these locations as AI-managed memory by default:
 
 - `Librarian/`
 - `*/librarian_memory/`
 
-Recommended rule:
+User intent should drive updates.
 
-Do not manually edit them unless necessary.
+The memory operator should maintain the files.
 
-These locations act as the system memory layer rather than ordinary notes.
+## Scope
 
-Instead, treat Gemini as the memory operator and issue updates such as:
+This repository intentionally does not try to provide:
 
-`Update current_task.md to reflect the new assignment and deadline.`
+- a universal standard
+- a finished product UI
+- full workflow automation
+- one fixed tool stack for everyone
 
-This keeps the memory layer consistent across tools and sessions.
+It provides a clear starting structure that you can adapt.
 
-Principle:
+## Related
 
-- user controls intent
-- Gemini controls memory
-
-## Documentation
-
-- [`docs/architecture.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/architecture.md): system structure and memory model
-- [`docs/setup.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/setup.md): environment and setup guidance
-- [`docs/workflows.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/workflows.md): practical operating examples
-- [`docs/philosophy.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/philosophy.md): design intent and constraints
-
-## Repository
-
-[https://github.com/smkgenesis/ai-utilization-system](https://github.com/smkgenesis/ai-utilization-system)
-
-## Final Insight
-
-Do not replicate this system exactly.
-
-Implement the idea in a form that matches your own environment.
+- Repository: [smkgenesis/ai-utilization-system](https://github.com/smkgenesis/ai-utilization-system)
