@@ -27,6 +27,23 @@ This README assumes you already understand the high-level idea:
 
 If you need the concept and motivation first, start from the blog post, then return here.
 
+## Who This Is For
+
+This repository is mainly for people who already use multiple AI tools and have started to feel the cost of fragmented context.
+
+Primary fit:
+
+- students managing courses, assignments, PDFs, and notes
+- researchers handling papers, summaries, and long-running context
+- builders balancing writing, planning, and software projects
+- people already switching between tools like ChatGPT, Claude, Perplexity, and NotebookLM
+
+This is less suitable for:
+
+- complete AI beginners
+- people who only use one simple tool casually
+- people who want a finished product instead of a system template
+
 ## Start Here
 
 1. Read [`docs/architecture.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/architecture.md).
@@ -137,7 +154,7 @@ It provides a clear starting structure that you can adapt.
 
 개인 AI 활용 시스템을 위한 레퍼런스 레포지토리입니다.
 
-이 README는 블로그 글을 이미 읽고 온 사람을 기준으로 작성되어 있습니다. 여기서는 개념 설명을 반복하기보다, 이 레포가 무엇을 제공하는지와 어디부터 보면 되는지를 빠르게 안내합니다.
+이 README는 블로그 글을 이미 읽고 온 사람을 기준으로 작성했습니다. 여기서는 개념 설명을 반복하기보다, 이 레포가 무엇을 제공하는지와 어디부터 보면 되는지를 빠르게 안내합니다.
 
 ### 이 레포에 들어 있는 것
 
@@ -163,6 +180,23 @@ It provides a clear starting structure that you can adapt.
 - 컨텍스트는 세션이 끝나도 유지되어야 한다
 
 개념과 동기부터 다시 보고 싶다면 블로그 글을 먼저 읽고, 그다음 이 레포로 돌아오면 됩니다.
+
+### 이 레포가 특히 잘 맞는 사람
+
+이 레포는 이미 여러 AI 도구를 써봤고, 컨텍스트가 흩어지는 문제를 체감한 사람에게 가장 잘 맞습니다.
+
+특히 다음과 같은 사용자에게 적합합니다.
+
+- 강의 자료, 과제, PDF, 노트를 함께 관리해야 하는 학생
+- 논문, 요약, 장기 컨텍스트를 다뤄야 하는 연구자
+- 문서 작업, 설계, 개발을 함께 굴리는 개인 빌더
+- ChatGPT, Claude, Perplexity, NotebookLM 같은 도구를 이미 함께 쓰고 있는 사람
+
+반대로 다음 경우에는 우선순위가 낮을 수 있습니다.
+
+- 아직 AI를 거의 써보지 않은 완전 초보자
+- 한 가지 도구만 가볍게 쓰는 사용자
+- 시스템 템플릿보다 완성형 제품을 기대하는 사용자
 
 ### 어디부터 보면 되나
 
