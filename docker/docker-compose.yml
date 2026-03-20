@@ -1,0 +1,11 @@
+services:
+  ai-os:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: ai-os
+    working_dir: /workspace
+    volumes:
+      - ..:/workspace
+    stdin_open: true
+    tty: true

@@ -1,459 +1,225 @@
-# ai-utilization-system
-Building My Personal AI Utilization System
-A practical architecture for using AI tools in research, learning, and software development.
-Motivation
-AI tools are powerful, but using them independently often leads to messy workflows.
-A typical workflow might look like this:
-
-Ask ChatGPT → open Perplexity → upload to NotebookLM → copy results to Drive → repeat
-
-Over time, several problems appear:
-
-context becomes fragmented
-knowledge spreads across multiple tools
-switching between AIs creates friction
-long-term work lacks a persistent structure
-The limitation is not the capability of AI models.
-The real problem is the lack of a clear architecture for using them together.
-Goal
-The goal of this project is simple:
-Design a system where multiple AI tools cooperate instead of being used independently.
-The system should support:
-
-studying university courses
-managing research materials
-writing long documents
-building software projects
-organizing knowledge over time
-The focus is practical workflow, not theoretical design.
-Key Idea
-Instead of relying on a single AI tool for everything, the system assigns specific roles to different tools.
-Example role distribution:
-
-Search       → Perplexity
-Store        → Zotero
-Analyze      → NotebookLM
-Organize     → Gemini
-Design       → Claude
-Build        → ChatGPT / Codex
-Code State   → GitHub
-Memory       → Google Drive
-Control      → gws CLI
-
-Each tool is used for what it does best.
-The result is a simple but structured AI working environment.
-Philosophy
-The system follows three basic principles.
-
-1. AI assists thinking — it does not replace it
-Human judgment remains central.
-
-2. AI is a cognitive tool
-AI extends research, coding, and learning workflows.
-
-3. Working systems > perfect systems
-A simple system that works consistently is better than a perfect design that is never used.
-Architecture Overview
-The system is centered around Google Drive as a shared knowledge and memory layer.
-The main operational interface to this layer is Gemini CLI, which interacts with Google Drive through gws.
-The architecture follows a simple pattern:
-
-Inputs → Gemini CLI → Google Drive → AI tools → Outputs
-                                   ↘ GitHub (code state)
-
-Raw materials enter the system, Gemini organizes them, AI tools consume the organized state, and the resulting outputs are written back into the system.
-Architecture Diagram
-                           INPUTS
-    ┌─────────────────────────────────────────────────────┐
-    │                                                     │
-    │  LearnUS files   Research papers   Notes   Manuals  │
-    │  Course PDFs     Project docs      Drafts  Outputs  │
-    │                                                     │
-    └──────────────────────────┬──────────────────────────┘
-                               │
-                               ▼
-                    ┌─────────────────────────┐
-                    │       Gemini CLI        │
-                    │   + gws integration     │
-                    │                         │
-                    │ - file classification   │
-                    │ - renaming              │
-                    │ - folder routing        │
-                    │ - context updates       │
-                    │ - schedule extraction   │
-                    └────────────┬────────────┘
-                                 │
-                                 ▼
-                    ┌─────────────────────────┐
-                    │      Google Drive       │
-                    │   Shared Memory Layer   │
-                    │                         │
-                    │ University/             │
-                    │ Projects/               │
-                    │ Librarian/              │
-                    │ librarian_memory/       │
-                    └───────┬────────┬────────┘
-                            │        │
-              ┌─────────────┘        └─────────────┐
-              ▼                                    ▼
-
-     ┌──────────────────────┐             ┌──────────────────────┐
-     │   Knowledge Tools    │             │   Execution Tools    │
-     │                      │             │                      │
-     │ NotebookLM           │             │ Claude              │
-     │ Perplexity           │             │ ChatGPT / Codex     │
-     │ Zotero (manual)      │             │ Claude Code         │
-     └──────────────────────┘             └──────────────────────┘
-              │                                    │
-              ▼                                    ▼
-       Research & Analysis                Design & Implementation
-
-Core Architectural Principle
-The system separates two types of state.
-
-Knowledge State
-Stored in Google Drive
-Includes:
-
-course materials
-research summaries
-documentation
-project notes
-shared AI context
-Code State
-Stored in GitHub
-Includes:
-
-source code
-version history
-software projects
-This separation keeps research workflows and development workflows clean.
-Google Drive Folder Architecture
-Google Drive acts as the shared memory layer of the system.
-All AI tools interact with this layer either directly or indirectly.
-The structure is intentionally minimal.
-Root Structure
-AI_OS/
-│
-├── University
-├── Projects
-└── Librarian
-
-Purpose of each folder:
-
-University → academic course materials
-Projects   → personal and development projects
-Librarian  → global AI system documentation
-
-Librarian
-The Librarian folder contains system-level context for the AI utilization system.
-Typical files:
-
-Librarian/
-    architecture.md
-    routing.md
-    decisions.md
-
-File roles:
-
-architecture.md → describes the AI system architecture
-routing.md      → rules for selecting the appropriate AI tool
-decisions.md    → important system conventions and design choices
-
-This folder acts as the global reference layer for the AI system.
-Local librarian_memory
-Unlike Librarian, local librarian_memory folders exist inside each course or project.
-Example:
-
-University/
-    2026_Spring/
-        CAS2101_Discrete_Mathematics/
-            librarian_memory/
-
-Projects/
-    Personal_Website/
-        librarian_memory/
-
-These folders store local working context.
-Typical contents:
-
-current task
-progress state
-important notes
-AI handoff information
-Memory separation:
-
-Global context → Librarian/
-Local context  → librarian_memory/
-
-Gemini-Managed Memory
-Both Librarian/ and local librarian_memory/ folders are strongly recommended to be managed automatically by Gemini.
-Through Gemini CLI + gws, Gemini can:
-
-organize files
-maintain task context
-summarize documents
-update working memory
-preserve continuity across sessions
-In this architecture, Gemini acts as the system librarian.
-University Workspace
-Course materials are stored under the University directory.
-Example structure:
-
-University/
-    2026_Spring/
-        CAS2101_Discrete_Mathematics/
-            lectures/
-            assignments/
-            announcements/
-            outputs/
-            librarian_memory/
-
-Folder roles:
-
-lectures        → lecture slides and course materials
-assignments     → homework and problem sheets
-announcements   → administrative notices
-outputs         → completed work
-librarian_memory → local AI context
-
-Each course becomes a self-contained workspace.
-Project Workspace
-Projects are stored under the Projects directory.
-Example:
-
-Projects/
-    Personal_Website/
-        librarian_memory/
-
-    AI_Research_OS/
-        librarian_memory/
-
-Project structures are intentionally flexible.
-However each project should include:
-
-librarian_memory/
-
-to preserve local AI context.
-Example Workflows
-The architecture becomes clearer when applied to real scenarios.
-Scenario 1 — Automatic Course Material Organization
-Course files downloaded from LearnUS can be passed directly to Gemini CLI.
-Gemini automatically:
-
-reads the file
-detects course information
-renames the document
-places it in the correct folder
-updates the course context
-Example transformation:
-
-00. Course Introduction.pdf
-→ CAS2101_L00_Course_Introduction.pdf
-
-Stored in:
-
-University/
-2026_Spring/
-CAS2101_Discrete_Mathematics/
-lectures/
-
-At the same time Gemini updates:
-
-librarian_memory/current_task.md
-
-Scenario 2 — Project Documentation Management
-Software projects rely heavily on GitHub for code.
-
-Code → GitHub
-
-But projects often generate additional materials:
-
-documentation
-design notes
-architecture diagrams
-manuals
-These files are stored in:
-
-Projects/
-project_name/
-
-Gemini helps organize these documents while GitHub manages code.
-Scenario 3 — Research Workflow
-Academic research follows a structured pipeline.
-
-Perplexity → Zotero → NotebookLM → Claude
-
-Steps:
-
-Discover papers using Perplexity
-Store original PDFs in Zotero
-Analyze documents in NotebookLM
-Reason about ideas with Claude
-Important distinction:
-
-Zotero = authoritative paper archive
-
-The user manages Zotero directly.
-Scenario 4 — Shared Context Across AI Tools
-AI tools usually lose context between sessions.
-This system solves that by storing context in Drive.
-Example:
-
-CAS2101_Discrete_Mathematics/
-librarian_memory/
-
-Files such as:
-
-current_task.md
-handoff.md
-brief.md
-
-can be read by multiple AI tools.
-Examples:
-
-Claude
-ChatGPT
-Perplexity
-
-When connected to the Drive workspace, these tools can restore context by reading these files.
-This creates persistent cross-AI memory.
-Scenario 5 — Automatic Schedule Extraction
-Course documents often contain important dates.
-Examples:
-
-assignment deadlines
-exam dates
-presentations
-Gemini CLI can:
-
-read document
-→ extract dates
-→ update Google Calendar
-
-Example:
-
-Midterm: April 21
-Final: June 16
-
-Gemini can automatically create calendar events such as:
-
-CAS2101 Midterm
-CAS2101 Final Exam
-
-At the same time, it updates local context.
-This connects:
-
-documents → memory → calendar
-
-Environment Setup
-The system relies on several tools working together.
-Detailed installation instructions are intentionally omitted.
-If needed, refer to official documentation or ask an AI assistant during setup.
-Step 1 — Identity Layer
-Create accounts for the services used in the system.
-Required services:
-
-Google
-GitHub
-OpenAI
-Anthropic
-Perplexity
-
-Strongly Recommended
-Use a single Google account as the primary identity.
-Many services support Google OAuth login, simplifying authentication.
-Benefits:
-
-fewer credentials
-faster setup
-easier cross-service integration
-Step 2 — Development Environment
-Install basic development tools.
-
-Git
-VS Code
-Node.js or Python
-Terminal environment
-
-Step 3 — Gemini CLI and Google Drive Integration
-Core components:
-
-Google Cloud project
-gcloud CLI
-gws CLI
-Gemini CLI
-Google Drive for desktop
-
-Recommended setup order:
-
-Install Google Drive for desktop
-Install gcloud CLI
-Create a Google Cloud project
-Install and authenticate gws CLI
-Install Gemini CLI
-Result:
-
-Gemini CLI → gws → Google Drive
-
-This enables AI-managed shared memory.
-Step 4 — AI Tools
-Tools can be accessed through different interfaces.
-
-Web tools
-Perplexity
-NotebookLM
-
-CLI tools
-Gemini CLI
-Codex CLI
-Claude Code
-
-App / Web tools
-ChatGPT
-Claude
-
-Usage depends on workflow preference.
-Step 5 — Optional Infrastructure
-Optional but useful tools:
-
-Zotero
-Docker
-GoodNotes
-
-Typical uses:
-
-Zotero   → paper archive
-Docker   → reproducible environments
-GoodNotes → handwritten notes
-
-Setup Philosophy
-The system avoids tightly coupling all tools.
-Instead it relies on loosely connected components through shared resources:
-
-Google Drive
-GitHub
-local files
-
-This makes the architecture flexible and easy to modify.
-Conclusion
-AI tools are powerful, but using them independently often leads to fragmented workflows and lost context.
-This architecture treats AI tools as specialized components within a structured system.
-By assigning clear roles to each tool and using Google Drive as a shared memory layer, the system enables:
-
-organized knowledge
-persistent AI context
-coordinated workflows across tools
-The result is a practical environment for learning, research, and software development.
-Repository
-A reference implementation of this architecture is available on GitHub.
-
-https://github.com/smkgenesis/ai-utilization-system
-
-The repository includes:
-
-environment setup guidelines
-example folder structures
-documentation of the AI utilization architecture
-The goal is simple:
-Turn a collection of AI tools into a structured working system. 이런 글도 포스팅하려고
+# AI Utilization System
+
+Practical architecture for using AI tools across research, learning, and software development.
+
+## What This Is
+
+This repository is a system repository, not a product repository.
+
+Its purpose is to help you build a personal AI working environment where multiple tools cooperate through shared context instead of being used independently.
+
+In practical terms, this repository distributes:
+
+- the operating philosophy
+- the architecture
+- the folder template
+- the minimal reproducible environment
+
+The system is designed for:
+
+- studying university courses
+- managing research materials
+- writing long documents
+- building software projects
+- organizing knowledge over time
+
+## Why This Exists
+
+AI tools are powerful, but typical usage quickly becomes fragmented.
+
+Common pattern:
+
+`ChatGPT -> Perplexity -> NotebookLM -> Drive -> repeat`
+
+Over time:
+
+- context gets fragmented
+- knowledge spreads across tools
+- switching costs increase
+- long-term work loses structure
+
+The limitation is not model capability.
+
+The real problem is the lack of architecture.
+
+## Core Idea
+
+Assign a clear role to each tool.
+
+| Role | Tool |
+| --- | --- |
+| Search | Perplexity |
+| Store | Zotero |
+| Analyze | NotebookLM |
+| Organize | Gemini |
+| Design | Claude |
+| Build | ChatGPT / Codex |
+| Code State | GitHub |
+| Memory | Google Drive |
+| Control | `gws` CLI |
+
+Each tool does one job well.
+
+## Architecture
+
+This system is built around one simple principle:
+
+`Google Drive = shared memory`
+
+`Gemini CLI = memory operator`
+
+Flow:
+
+`Inputs -> Gemini CLI -> Google Drive -> AI tools -> Outputs`
+
+Code output is tracked separately in GitHub.
+
+```text
+                    INPUTS
+   (PDFs, notes, docs, course files, drafts)
+                         |
+                         v
+                +-------------------+
+                |    Gemini CLI     |
+                |   via gws CLI     |
+                |                   |
+                | - classify        |
+                | - rename          |
+                | - route           |
+                | - update memory   |
+                | - extract dates   |
+                +---------+---------+
+                          |
+                          v
+                +-------------------+
+                |   Google Drive    |
+                |   Memory Layer    |
+                +---------+---------+
+                          |
+        +-----------------+-----------------+
+        v                                   v
++----------------------+       +----------------------+
+|   Knowledge Tools    |       |   Execution Tools    |
+| NotebookLM           |       | Claude               |
+| Perplexity           |       | ChatGPT / Codex      |
+| Zotero (manual)      |       | Claude Code          |
++----------------------+       +----------------------+
+        |                                   |
+        v                                   v
+   Analysis / Search                Design / Build / Code
+
+                          |
+                          v
+                        OUTPUTS
+                          |
+              +-----------+-----------+
+              v                       v
+        Google Drive            GitHub (code)
+```
+
+## Minimal Setup
+
+You do not need every tool from day one.
+
+Minimal working setup:
+
+- Google Drive
+- Gemini CLI
+- `gws` CLI
+
+This already gives you:
+
+- file organization
+- persistent memory
+- reusable context
+
+Optional additions:
+
+- Perplexity for search
+- NotebookLM for analysis
+- Claude for reasoning and design
+- ChatGPT / Codex for implementation
+- GitHub for code state
+- Zotero for research archive
+
+## Repository Structure
+
+```text
+ai-utilization-system/
+|-- README.md
+|-- docs/
+|   |-- architecture.md
+|   |-- setup.md
+|   |-- workflows.md
+|   `-- philosophy.md
+|-- template/
+|   `-- AI_OS/
+|       |-- University/
+|       |-- Projects/
+|       `-- Librarian/
+|-- examples/
+|   |-- example_current_task.md
+|   |-- example_brief.md
+|   `-- example_handoff.md
+`-- docker/
+    |-- Dockerfile
+    |-- docker-compose.yml
+    `-- README.md
+```
+
+## Quick Start
+
+1. Clone this repository.
+2. Read [`docs/architecture.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/architecture.md).
+3. Copy the [`template/AI_OS`](/C:/Users/smkge/Develop/ai-utilization-system/template/AI_OS) folder into your Google Drive workspace.
+4. Set up the environment from [`docs/setup.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/setup.md).
+5. If you want a reproducible CLI environment, start from [`docker/README.md`](/C:/Users/smkge/Develop/ai-utilization-system/docker/README.md).
+
+## Design Principles
+
+- AI assists thinking. It does not replace it.
+- AI is a cognitive tool.
+- Working systems matter more than perfect systems.
+- Tools are replaceable.
+- Context should persist.
+
+## Librarian Policy
+
+The following locations are intended to be AI-managed:
+
+- `Librarian/`
+- `*/librarian_memory/`
+
+Recommended rule:
+
+Do not manually edit them unless necessary.
+
+These locations act as the system memory layer rather than ordinary notes.
+
+Instead, treat Gemini as the memory operator and issue updates such as:
+
+`Update current_task.md to reflect the new assignment and deadline.`
+
+This keeps the memory layer consistent across tools and sessions.
+
+Principle:
+
+- user controls intent
+- Gemini controls memory
+
+## Documentation
+
+- [`docs/architecture.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/architecture.md): system structure and memory model
+- [`docs/setup.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/setup.md): environment and setup guidance
+- [`docs/workflows.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/workflows.md): practical operating examples
+- [`docs/philosophy.md`](/C:/Users/smkge/Develop/ai-utilization-system/docs/philosophy.md): design intent and constraints
+
+## Repository
+
+[https://github.com/smkgenesis/ai-utilization-system](https://github.com/smkgenesis/ai-utilization-system)
+
+## Final Insight
+
+Do not replicate this system exactly.
+
+Implement the idea in a form that matches your own environment.
